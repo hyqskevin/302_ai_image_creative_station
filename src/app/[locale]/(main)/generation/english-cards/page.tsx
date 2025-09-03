@@ -1,7 +1,14 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import Image from "next/image";
 import React, { useState } from "react";
@@ -15,9 +22,11 @@ import { toast } from "sonner";
 import { useAtom } from "jotai";
 import { exampleStoreAtom } from "@/stores/slices/example_store";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
 const EnglishCardsPage = () => {
   const t = useTranslations();
   const [words, setWords] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const { apiKey } = store.get(appConfigAtom);
   const { addHistory, updateHistory } = useHistory();
   const [generationCount, setGenerationCount] = useAtom(generationStoreAtom);
@@ -49,6 +58,7 @@ const EnglishCardsPage = () => {
       const result = await generateEnglishCard({
         words: words || "apple,tree,bear,banana",
         apiKey: apiKey || "",
+        model: model,
       });
       updateHistory(historyId, {
         rawPrompt: words,
@@ -85,6 +95,24 @@ const EnglishCardsPage = () => {
   };
   return (
     <div className="mx-auto w-full max-w-3xl justify-center space-y-4 pt-3">
+      <div className="space-y-2">
+        <Label htmlFor="model-select" className="text-sm">
+          {t("common.model")}
+        </Label>
+        <Select value={model} onValueChange={(value) => setModel(value)}>
+          <SelectTrigger id="model-select" className="w-[180px]">
+            <SelectValue placeholder={t("common.model")} />
+          </SelectTrigger>
+          <SelectContent>
+            {models.map((model) => (
+              <SelectItem key={model} value={model}>
+                {model}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       <Card className="w-full">
         <Textarea
           placeholder={t("english_cards.input.placeholder")}

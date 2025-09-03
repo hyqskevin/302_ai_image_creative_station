@@ -18,6 +18,7 @@ export default function CrystalBallForm() {
         text: t("crystal-ball.defaultValue"),
       }}
       imgDescription={t("crystal-ball.label.description")}
+      editImage={false}
     />
   );
 }

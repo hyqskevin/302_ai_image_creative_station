@@ -15,6 +15,14 @@ import { toast } from "sonner";
 import { plasticTrashBagPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
 import { HexColorPicker } from "react-colorful";
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 export default function PlasticTrashBagForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
@@ -32,7 +40,7 @@ export default function PlasticTrashBagForm() {
   const bagColorPickerRef = useRef<HTMLDivElement>(null);
   const logoColorRef = useRef<HTMLDivElement>(null);
   const logoColorPickerRef = useRef<HTMLDivElement>(null);
-
+  const [model, setModel] = useState("gpt-image-1");
   const toggleColorPalette = (field: "bagColor" | "logoColor") => {
     setActiveColorField(field);
     setShowColorPalette(!showColorPalette || activeColorField !== field);
@@ -115,14 +123,31 @@ export default function PlasticTrashBagForm() {
         centerLogo || defaultValues.centerLogo
       ),
       type: "plastic_trash_bag",
+      model: model,
     });
   };
 
   return (
     <div className="mx-auto max-w-xl">
       <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-          {/* Character Color */}
           <div className="relative space-y-2">
             <Label htmlFor="bagColor" className="text-sm font-medium">
               {t("plastic-trash-bag.label.bagColor")}

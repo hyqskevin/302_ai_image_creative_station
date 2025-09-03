@@ -86,6 +86,65 @@ export const useHistory = (page = 1) => {
     []
   );
 
+  // 视频相关的操作函数
+  const addVideoToHistory = useCallback(
+    async (
+      historyId: string,
+      videoData: {
+        taskId: string;
+        prompt: string;
+        model: string;
+        duration: string;
+        sourceImageBase64: string;
+      }
+    ) => {
+      await db.history
+        .where("id")
+        .equals(historyId)
+        .modify((history: History) => {
+          history.video = {
+            ...videoData,
+            status: "pending" as const,
+          };
+        });
+    },
+    []
+  );
+
+  const updateVideoStatus = useCallback(
+    async (
+      historyId: string,
+      status: "pending" | "success" | "failed",
+      url?: string,
+      coverUrl?: string
+    ) => {
+      await db.history
+        .where("id")
+        .equals(historyId)
+        .modify((history: History) => {
+          if (history.video) {
+            history.video.status = status;
+            if (url) {
+              history.video.url = url;
+            }
+            if (coverUrl) {
+              history.video.coverUrl = coverUrl;
+            }
+          }
+        });
+    },
+    []
+  );
+
+  const getPendingVideos = useCallback(async () => {
+    const pendingVideos = await db.history
+      .filter(
+        (history: any) => history.video && history.video.status === "pending"
+      )
+      .toArray();
+    return pendingVideos;
+  }, []);
+
   return {
     history,
     addHistory,
@@ -93,5 +152,9 @@ export const useHistory = (page = 1) => {
     deleteHistory,
     updateHistoryImage,
     updateHistoryImageStatus,
+    // 新增的视频相关函数
+    addVideoToHistory,
+    updateVideoStatus,
+    getPendingVideos,
   };
 };

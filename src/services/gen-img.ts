@@ -9,6 +9,8 @@ interface GenerateImageParams {
   isOptimize?: boolean;
   customOptimizePrompt?: string;
   size?: "1536x1024" | "1024x1024" | "1024x1536";
+  model?: string;
+  sourceLang?: "ZH" | "EN";
 }
 
 interface GenerateImageResult {
@@ -24,6 +26,8 @@ export const generateImage = async ({
   isOptimize = false,
   customOptimizePrompt,
   size,
+  model = "gpt-image-1",
+  sourceLang = "ZH",
 }: GenerateImageParams) => {
   try {
     const res = await ky.post("/api/gen-img", {
@@ -34,6 +38,8 @@ export const generateImage = async ({
         isOptimize,
         customOptimizePrompt,
         size,
+        model,
+        sourceLang,
       },
     });
     return res.json<GenerateImageResult>();

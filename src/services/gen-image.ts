@@ -7,6 +7,7 @@ interface GenerateImageParams {
   prompt: string;
   isOptimize: boolean;
   apiKey: string;
+  model: string;
 }
 
 interface GenerateImageResult {
@@ -21,6 +22,7 @@ export const generateImage = async ({
   prompt,
   isOptimize,
   apiKey,
+  model,
 }: GenerateImageParams) => {
   try {
     const res = await ky.post("/api/gen-image", {
@@ -29,6 +31,7 @@ export const generateImage = async ({
         prompt,
         isOptimize,
         apiKey,
+        model,
       },
     });
     return res.json<GenerateImageResult>();

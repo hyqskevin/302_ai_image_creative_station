@@ -13,6 +13,9 @@ type ImageGenerationOptions = {
   imageData?: string;
   shouldUseImageInput?: boolean;
   type?: string;
+  size?: "1024x1024" | "1536x1024" | "1024x1536";
+  model?: string;
+  sourceLang?: "ZH" | "EN";
 };
 
 export function useImageGeneration() {
@@ -42,7 +45,7 @@ export function useImageGeneration() {
         image: {
           base64: "",
           prompt: options.prompt,
-          model: "",
+          model: options.model || "",
           status: "pending",
           type: options.type,
         },
@@ -53,15 +56,19 @@ export function useImageGeneration() {
           img: options.imageData,
           prompt: options.prompt,
           apiKey: apiKey || "",
+          size: options.size,
+          model: options.model,
+          sourceLang: options.sourceLang,
         });
 
         updateHistory(historyId, {
           rawPrompt: options.rawPrompt || "",
           shouldOptimize: false,
           image: {
-            base64: image.url,
+            base64:
+              `data:image/png;base64,${image.b64_json}` || image.url || "",
             prompt: options.prompt,
-            model: "",
+            model: options.model || "",
             status: "success",
             type: options.type,
           },
@@ -72,6 +79,8 @@ export function useImageGeneration() {
         const { image }: any = await generateImage({
           prompt: options.prompt,
           apiKey: apiKey || "",
+          model: options.model,
+          sourceLang: options.sourceLang,
         });
 
         updateHistory(historyId, {
@@ -80,7 +89,7 @@ export function useImageGeneration() {
           image: {
             base64: "data:image/png;base64," + image.images[0].base64Data,
             prompt: options.prompt,
-            model: "",
+            model: options.model || "",
             status: "success",
             type: options.type,
           },

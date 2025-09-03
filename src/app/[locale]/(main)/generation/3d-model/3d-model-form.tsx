@@ -14,11 +14,20 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { threeDModelPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export default function ThreeDModelForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const [model, setModel] = useState("");
+  const [imageModel, setImageModel] = useState("gpt-image-1");
   const [bottomText, setBottomText] = useState("");
   const [detailDescription, setDetailDescription] = useState("");
   const t = useTranslations();
@@ -49,6 +58,7 @@ export default function ThreeDModelForm() {
         detailDescription || defaultValues.detailDescription
       ),
       type: "3d_model",
+      model: imageModel,
     });
   };
 
@@ -96,6 +106,24 @@ export default function ThreeDModelForm() {
             rows={3}
             className="flex-1"
           />
+        </div>
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Label htmlFor="imageModel" className="w-16 flex-shrink-0 text-wrap">
+            {t("common.model")}
+          </Label>
+          <Select value={imageModel} onValueChange={setImageModel}>
+            <SelectTrigger id="imageModel" className="flex-1">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

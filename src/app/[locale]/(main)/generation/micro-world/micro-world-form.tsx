@@ -14,6 +14,14 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { microWorldPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+} from "@/components/ui/select";
+import { SelectTrigger } from "@/components/ui/select";
 
 export default function MicroWorldForm() {
   const [externalWorld, setExternalWorld] = useState("");
@@ -21,7 +29,7 @@ export default function MicroWorldForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
-
+  const [model, setModel] = useState("gpt-image-1");
   const handleGenerate = async () => {
     // if (!externalWorld) {
     //   toast.error(t("micro-world.warning.externalWorld"));
@@ -48,6 +56,7 @@ export default function MicroWorldForm() {
         internalWorld || defaultValues.internalWorld
       ),
       type: "micro_world",
+      model: model,
     });
   };
 
@@ -77,6 +86,24 @@ export default function MicroWorldForm() {
             placeholder={t("micro-world.placeholder.internalWorld")}
             className="min-h-[100px]"
           />
+        </div>
+
+        <div className="flex items-center">
+          <Label htmlFor="model-select" className="w-20 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

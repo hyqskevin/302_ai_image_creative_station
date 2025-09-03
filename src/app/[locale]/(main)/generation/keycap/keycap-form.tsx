@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/select";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
 
 type ColorTone = "warm" | "cold";
 
@@ -31,6 +32,7 @@ export default function KeycapForm() {
   const [internalScene, setInternalScene] = useState("");
   const [sceneDescription, setSceneDescription] = useState("");
   const [colorTone, setColorTone] = useState<ColorTone>("warm");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
@@ -78,6 +80,7 @@ export default function KeycapForm() {
       prompt: prompt,
       isOptimize: true,
       type: "keycap",
+      model: model,
     });
   };
 
@@ -166,6 +169,24 @@ export default function KeycapForm() {
                   <SelectItem value="cold">
                     {t("keycap.colorTone.cold")}
                   </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="relative flex flex-col space-y-2">
+              <label htmlFor="model-select" className="text-sm font-medium">
+                {t("common.model")}
+              </label>
+              <Select value={model} onValueChange={setModel}>
+                <SelectTrigger id="model-select" className="border-2">
+                  <SelectValue placeholder={t("common.model")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {models.map((modelOption) => (
+                    <SelectItem key={modelOption} value={modelOption}>
+                      {modelOption}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

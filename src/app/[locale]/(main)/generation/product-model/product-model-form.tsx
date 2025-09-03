@@ -24,10 +24,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
 
 export default function ProductModelForm() {
   const [gender, setGender] = useState("male");
   const [ethnicity, setEthnicity] = useState("white");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
@@ -45,6 +47,7 @@ export default function ProductModelForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "product_model",
+      model: model,
     });
   };
 
@@ -103,6 +106,24 @@ export default function ProductModelForm() {
                 <SelectItem value="black">
                   {t("product-model.label.black")}
                 </SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="mb-4 flex w-full flex-col sm:flex-row sm:items-center">
+            <Label className="mb-2 mr-1 whitespace-nowrap text-sm font-medium sm:mb-0 sm:min-w-16">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[...models, ...imageEditModels].map((model) => (
+                  <SelectItem key={model} value={model}>
+                    {model}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
           </div>

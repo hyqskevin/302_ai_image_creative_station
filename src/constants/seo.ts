@@ -24,7 +24,7 @@ export const SEO_DATA: SEOData = {
       image: "/images/global/desc_en.png",
     },
     ja: {
-      title: "AI画像クリエイティブステーション",
+      title: "AI 画像クリエイティブステーション",
       description: "GPT-Image-1の多様なアイデアの遊び方を探る",
       image: "/images/global/desc_ja.png",
     },

@@ -14,6 +14,14 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { cloudArtPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 export default function CloudArtForm() {
   const t = useTranslations();
@@ -21,7 +29,7 @@ export default function CloudArtForm() {
   const [location, setLocation] = useState("");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
-
+  const [model, setModel] = useState("gpt-image-1");
   const handleGenerate = async () => {
     // if (!shape) {
     //   toast.error(t("cloud-art-form.warning.shape"));
@@ -45,6 +53,7 @@ export default function CloudArtForm() {
       ),
       size: "1024x1536",
       type: "cloud_art",
+      model: model,
     });
   };
 
@@ -52,7 +61,24 @@ export default function CloudArtForm() {
     <div className="mx-auto max-w-2xl">
       <div className="space-y-6">
         <div className="flex items-center gap-4">
-          <Label htmlFor="shape" className="w-20 flex-shrink-0">
+          <Label htmlFor="model-select" className="w-20 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-start gap-4">
+          <Label htmlFor="shape" className="w-20 flex-shrink-0 pt-2">
             {t("cloud-art-form.label.shape")}
           </Label>
           <Input

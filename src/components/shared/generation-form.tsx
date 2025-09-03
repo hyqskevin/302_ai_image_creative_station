@@ -11,6 +11,16 @@ import { toast } from "sonner";
 import ImageDrop from "@/components/basic/change-style/text/image-drop";
 import { useTranslations } from "next-intl";
 import { generationStoreAtom } from "@/stores/slices/generation_store";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { imageEditModels, models } from "@/constants/models";
+
 interface GenerationFormProps {
   textPromptFn: (text: string) => string;
   imagePromptFn: () => string;
@@ -22,6 +32,7 @@ interface GenerationFormProps {
     image?: string;
   };
   imgDescription?: string;
+  editImage?: boolean;
 }
 
 export default function GenerationForm({
@@ -32,11 +43,37 @@ export default function GenerationForm({
   type,
   defaultValues,
   imgDescription,
+  editImage = true,
 }: GenerationFormProps) {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
   const [activeTab, setActiveTab] = useState<"text" | "upload">("text");
+  // 为每个标签页维护独立的模型选择状态
+  const [textModel, setTextModel] = useState("gpt-image-1");
+  const [uploadModel, setUploadModel] = useState("gpt-image-1");
+
+  // 根据当前标签页获取可用的模型列表
+  const getAvailableModels = () => {
+    if (activeTab === "upload") {
+      return [...models, ...(editImage ? imageEditModels : [])];
+    }
+    return models; // text 模式只使用基础模型
+  };
+
+  // 获取当前活动标签页的模型
+  const getCurrentModel = () => {
+    return activeTab === "text" ? textModel : uploadModel;
+  };
+
+  // 设置当前活动标签页的模型
+  const setCurrentModel = (model: string) => {
+    if (activeTab === "text") {
+      setTextModel(model);
+    } else {
+      setUploadModel(model);
+    }
+  };
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const { isGenerating, generateWithImage } = useImageGeneration();
   const [generationCount, setGenerationCount] = useAtom(generationStoreAtom);
@@ -58,6 +95,7 @@ export default function GenerationForm({
           prompt: textPromptFn(newText || ""),
           shouldUseImageInput: false,
           type,
+          model: getCurrentModel(),
         });
       } catch (error) {
       } finally {
@@ -80,6 +118,7 @@ export default function GenerationForm({
           imageData: imageForm,
           shouldUseImageInput: true,
           type,
+          model: getCurrentModel(),
         });
       } catch (error) {
       } finally {
@@ -141,6 +180,30 @@ export default function GenerationForm({
             {activeTab === "upload" && imgDescription && (
               <div className="mb-4 text-sm">{imgDescription}</div>
             )}
+
+            <div className="mb-4">
+              <div className="flex items-center gap-2">
+                <Label className="whitespace-nowrap text-sm font-medium">
+                  {t("common.model")}
+                </Label>
+                <Select
+                  value={getCurrentModel()}
+                  onValueChange={setCurrentModel}
+                >
+                  <SelectTrigger className="flex-1">
+                    <SelectValue placeholder={t("common.model")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getAvailableModels().map((modelOption) => (
+                      <SelectItem key={modelOption} value={modelOption}>
+                        {modelOption}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            </div>
+
             <div className="flex items-center space-x-2">
               <Button
                 onClick={handleGenerate}

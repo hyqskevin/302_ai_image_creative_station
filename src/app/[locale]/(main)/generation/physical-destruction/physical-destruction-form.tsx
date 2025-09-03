@@ -7,6 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useAtom } from "jotai";
 import { exampleStoreAtom } from "@/stores/slices/example_store";
 import { examples } from "./examples";
@@ -14,11 +21,12 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { physicalDestructionPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
-
+import { models } from "@/constants/models";
 export default function PhysicalDestructionForm() {
   const t = useTranslations();
   const [character, setCharacter] = useState("");
   const [theme, setTheme] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
 
@@ -50,6 +58,8 @@ export default function PhysicalDestructionForm() {
       prompt: physicalDestructionPrompt(newCharacter, newTheme),
       size: "1024x1536",
       type: "physical_destruction",
+      model: model,
+      isOptimize: true,
     });
   };
 
@@ -79,6 +89,24 @@ export default function PhysicalDestructionForm() {
             placeholder={t("physical_destruction.placeholder.theme")}
             className="min-h-[100px]"
           />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-20 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((model) => (
+                <SelectItem key={model} value={model}>
+                  {model}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

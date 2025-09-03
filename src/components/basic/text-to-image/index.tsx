@@ -23,6 +23,8 @@ import { generationStoreAtom } from "@/stores/slices/generation_store";
 import { useAtom } from "jotai";
 import { toast } from "sonner";
 import { useLocale, useTranslations } from "next-intl";
+import { models } from "@/constants/models";
+
 const logger = createScopedLogger("Home");
 let firstTime = true;
 
@@ -39,12 +41,88 @@ const TextToImage = () => {
   const [isOptimize, setIsOptimize] = useState(true);
   const [generationCount, setGenerationCount] = useAtom(generationStoreAtom);
   const [isTranslate, setIsTranslate] = useState(false);
+  const [model, setModel] = useState("gpt-image-1");
+
   useEffect(() => {
     const promptParam = searchParams.get("prompt");
-    if (promptParam && firstTime) {
+    const modelParam = searchParams.get("model");
+    const imageParam = searchParams.get("image");
+
+    if (promptParam && firstTime && !imageParam) {
       setPrompt(promptParam);
+      setModel(modelParam || "gpt-image-1");
       logger.debug("Received prompt:", promptParam);
-      handleGenerateImage(promptParam);
+      const autoGenerateImage = async () => {
+        let historyId = "";
+        if (generationCount.generationCount >= 4) {
+          toast.warning(t("global.error.max_generation"));
+          return;
+        }
+        // if (prompt.trim() === "") {
+        //   toast.error(t("basic.input.placeholder"));
+        //   return;
+        // }
+        setGenerationCount((prev) => ({
+          ...prev,
+          loading: true,
+          generationCount: prev.generationCount + 1,
+        }));
+
+        historyId = await addHistory({
+          rawPrompt: promptParam || t("basic.default_prompt"),
+          shouldOptimize: isOptimize,
+          image: {
+            base64: "",
+            prompt: "",
+            model: "",
+            status: "pending",
+            type: "realistic_photo",
+          },
+        });
+
+        try {
+          const result = await generateImage({
+            prompt: promptParam || t("basic.default_prompt"),
+            isOptimize,
+            apiKey: apiKey || "",
+            model: modelParam || "gpt-image-1",
+          });
+
+          updateHistory(historyId, {
+            rawPrompt: prompt || "",
+            shouldOptimize: isOptimize,
+            image: {
+              base64: "data:image/png;base64," + result.image.image,
+              prompt: result.image.prompt,
+              model: result.image.model,
+              status: "success",
+              type: "realistic_photo",
+            },
+          });
+        } catch (error) {
+          updateHistory(historyId, {
+            rawPrompt: prompt || "",
+            shouldOptimize: isOptimize,
+            image: {
+              base64: "",
+              prompt: "",
+              model: "",
+              status: "failed",
+              type: "realistic_photo",
+            },
+          });
+        } finally {
+          setGenerationCount((prev) => ({
+            ...prev,
+            loading: false,
+            generationCount: Math.max(prev.generationCount - 1, 0),
+          }));
+        }
+
+        // 图片生成逻辑
+        logger.debug("Generating image with prompt:", prompt);
+      };
+      autoGenerateImage();
       firstTime = false;
     }
   }, [searchParams]);
@@ -82,6 +160,7 @@ const TextToImage = () => {
         prompt: prompt || paramsPrompt || t("basic.default_prompt"),
         isOptimize,
         apiKey: apiKey || "",
+        model,
       });
 
       updateHistory(historyId, {
@@ -167,6 +246,25 @@ const TextToImage = () => {
               <SelectItem value="EN">{t("basic.language.en")}</SelectItem>
               <SelectItem value="ZH">{t("basic.language.zh")}</SelectItem>
               <SelectItem value="JA">{t("basic.language.ja")}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* 模型选择下拉框 */}
+        <div className="space-y-2">
+          <Label htmlFor="model-select" className="text-sm">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={(value) => setModel(value)}>
+            <SelectTrigger id="model-select">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((model) => (
+                <SelectItem key={model} value={model}>
+                  {model}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>

@@ -5,7 +5,7 @@ import {
 } from "ai";
 import { anthropic } from "@ai-sdk/anthropic";
 import { createAI302 } from "@302ai/ai-sdk";
-import { createScopedLogger } from "@/utils";
+import { createScopedLogger, generateFluxKontextImage } from "@/utils";
 import { env } from "@/env";
 import ky from "ky";
 import prompts from "@/constants/prompts";
@@ -18,10 +18,12 @@ export async function POST(request: Request) {
       prompt,
       apiKey,
       isOptimize,
+      model,
     }: {
       prompt: string;
       apiKey: string;
       isOptimize: boolean;
+      model: "gpt-image-1" | "flux-kontext-pro" | "flux-kontext-max";
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
@@ -37,11 +39,27 @@ export async function POST(request: Request) {
       });
       newPrompt = text;
     }
+    let newImage: any;
+    if (model === "flux-kontext-pro" || model === "flux-kontext-max") {
+      // 使用封装后的函数生成图像
+      const base64Image = await generateFluxKontextImage(
+        env.NEXT_PUBLIC_API_URL,
+        newPrompt,
+        apiKey,
+        undefined,
+        model as "flux-kontext-pro" | "flux-kontext-max"
+      );
 
-    const { image }: any = await generateImage({
-      model: ai302.image("gpt-image-1"),
-      prompt: newPrompt,
-    });
+      newImage = {
+        base64Data: base64Image,
+      };
+    } else {
+      const { image }: any = await generateImage({
+        model: ai302.image(model),
+        prompt: newPrompt,
+      });
+      newImage = image;
+    }
 
     logger.info("Image generated successfully");
 
@@ -49,7 +67,7 @@ export async function POST(request: Request) {
     try {
       // Convert base64 to blob
       const base64Response = await fetch(
-        `data:image/png;base64,${image.base64 || image.base64Data}`
+        `data:image/png;base64,${newImage.base64 || newImage.base64Data}`
       );
       const blob = await base64Response.blob();
 
@@ -74,7 +92,7 @@ export async function POST(request: Request) {
 
         return Response.json({
           image: {
-            image: image.base64Data,
+            image: newImage.base64Data || newImage.base64,
             imageUrl: uploadResponse.data.url,
             prompt: newPrompt,
           },
@@ -88,7 +106,7 @@ export async function POST(request: Request) {
       // If upload fails, still return the base64 image
       return Response.json({
         image: {
-          image: image.base64,
+          image: newImage.base64 || newImage.base64Data,
           prompt: newPrompt,
           uploadError: "Failed to upload the image to server",
         },

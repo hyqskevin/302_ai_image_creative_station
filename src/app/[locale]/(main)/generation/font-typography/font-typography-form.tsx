@@ -5,7 +5,6 @@ import type React from "react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useAtom } from "jotai";
 import { exampleStoreAtom } from "@/stores/slices/example_store";
@@ -13,7 +12,6 @@ import { examples } from "./examples";
 import { useImageGeneration } from "@/hooks/use-image-generation";
 import { toast } from "sonner";
 import { fontTypographyPrompt } from "./prompt";
-import { appConfigAtom, store } from "@/stores";
 import ImageDrop from "@/components/basic/change-style/text/image-drop";
 import { Card } from "@/components/ui/card";
 import {
@@ -24,9 +22,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
 
 export default function FontTypographyForm() {
   const [text, setText] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
@@ -49,6 +49,7 @@ export default function FontTypographyForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "font_typography",
+      model: model,
     });
   };
 
@@ -78,6 +79,24 @@ export default function FontTypographyForm() {
               onChange={(e) => setText(e.target.value)}
               className="w-full"
             />
+          </div>
+
+          <div className="mb-4 flex w-full flex-col space-y-2">
+            <Label className="mb-2 mr-1 whitespace-nowrap text-sm font-medium sm:mb-0">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger id="model-select" className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[...models].map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">

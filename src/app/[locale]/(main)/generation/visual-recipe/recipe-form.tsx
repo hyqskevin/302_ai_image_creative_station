@@ -20,13 +20,14 @@ import { useAtom } from "jotai";
 import { exampleStoreAtom } from "@/stores/slices/example_store";
 import { examples } from "./examples";
 import { useTranslations } from "next-intl";
-
+import { models } from "@/constants/models";
 export default function RecipeForm() {
   const t = useTranslations();
   const [dishName, setDishName] = useState("");
   const [ingredients, setIngredients] = useState("");
   const [cookingSteps, setCookingSteps] = useState("");
   const [style, setStyle] = useState("handdrawn");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
 
@@ -55,6 +56,7 @@ export default function RecipeForm() {
       prompt,
       type: "visual_recipe",
       size: "1024x1536",
+      model: model,
     });
   };
 
@@ -107,24 +109,45 @@ export default function RecipeForm() {
             />
 
             <div className="flex w-full flex-col justify-end gap-4 sm:w-auto">
-              <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
-                <span className="text-sm font-medium lg:flex-shrink-0">
-                  {t("visual-recipe.input.style")}
-                </span>
-                <Select value={style} onValueChange={setStyle}>
-                  <SelectTrigger className="w-full sm:w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="handdrawn">
-                      {t("visual-recipe.select.handdrawn")}
-                    </SelectItem>
-                    <SelectItem value="digital">
-                      {t("visual-recipe.select.digital")}
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+                  <span className="text-sm font-medium lg:flex-shrink-0">
+                    {t("visual-recipe.input.style")}
+                  </span>
+                  <Select value={style} onValueChange={setStyle}>
+                    <SelectTrigger className="w-full sm:w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="handdrawn">
+                        {t("visual-recipe.select.handdrawn")}
+                      </SelectItem>
+                      <SelectItem value="digital">
+                        {t("visual-recipe.select.digital")}
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col items-start gap-2 sm:flex-row sm:items-center">
+                  <span className="text-sm font-medium lg:flex-shrink-0">
+                    {t("common.model")}
+                  </span>
+                  <Select value={model} onValueChange={setModel}>
+                    <SelectTrigger className="w-full sm:w-[180px]">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {models.map((model) => (
+                        <SelectItem key={model} value={model}>
+                          {model}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
               </div>
+
               <div className="flex items-center space-x-4">
                 <Button
                   onClick={handleGenerateImage}

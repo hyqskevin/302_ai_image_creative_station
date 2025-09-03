@@ -7,6 +7,7 @@ import { MediaItem } from "./media-item";
 import { GalleryModal } from "./gallery-modal";
 import { Typewriter } from "@/components/ui/typewriter-text";
 import { useTranslations } from "next-intl";
+import { VideoIcon } from "@radix-ui/react-icons";
 
 export const WaterfallGallery = ({
   mediaItems,
@@ -16,6 +17,7 @@ export const WaterfallGallery = ({
   emptyStateMessage = "No images to display",
   onDelete,
   onDownload,
+  onVideoGenerated,
 }: GalleryProps) => {
   const [selectedItem, setSelectedItem] = useState<MediaItemType | null>(null);
   const [columns, setColumns] = useState<MediaItemType[][]>([]);
@@ -214,23 +216,27 @@ export const WaterfallGallery = ({
                     onClick={() => setSelectedItem(item)}
                     onDelete={onDelete}
                     onDownload={onDownload}
+                    onVideoGenerated={onVideoGenerated}
                     showActions={true}
                     showTag={true}
                   />
+
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"
                     initial={false}
                     animate={{ opacity: 0 }}
                     whileHover={{ opacity: 1 }}
                   >
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
-                      <h3 className="line-clamp-1 text-lg font-semibold text-white">
-                        {t(item.type)}
-                      </h3>
-                      <p className="mt-1 line-clamp-2 text-sm text-white/80">
-                        {item.desc}
-                      </p>
-                    </div>
+                    <>
+                      <div className="absolute bottom-0 left-0 right-0 p-4">
+                        <h3 className="line-clamp-1 text-lg font-semibold text-white">
+                          {item?.type ? t(item.type) : item?.title || "Image"}
+                        </h3>
+                        <p className="mt-1 line-clamp-2 text-sm text-white/80">
+                          {item?.desc}
+                        </p>
+                      </div>
+                    </>
                   </motion.div>
                 </motion.div>
               ))}

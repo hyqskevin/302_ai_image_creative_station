@@ -14,13 +14,20 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { superRealisticFigurePrompt } from "./prompt";
 import { useTranslations } from "next-intl";
-
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+} from "@/components/ui/select";
+import { SelectTrigger } from "@/components/ui/select";
 export default function SuperRealisticFigureForm() {
   const [text, setText] = useState("");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
-
+  const [model, setModel] = useState("gpt-image-1");
   const handleGenerate = async () => {
     // if (!text) {
     //   toast.error(t("double-exposure.warning.text"));
@@ -37,15 +44,32 @@ export default function SuperRealisticFigureForm() {
         text || defaultValues.text
       ),
       type: "super_realistic_figure",
+      model: model,
     });
   };
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="flex items-start gap-4">
           <Textarea
-            id="text"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={t("super-realistic-figure.placeholder.text")}

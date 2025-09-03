@@ -14,9 +14,18 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { doubleExposurePrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { models } from "@/constants/models";
 
 export default function DoubleExposureForm() {
   const [text, setText] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
@@ -36,6 +45,7 @@ export default function DoubleExposureForm() {
       isOptimize: true,
       customOptimizePrompt: doubleExposurePrompt(text || defaultValues.text),
       type: "double_exposure",
+      model: model,
     });
   };
 
@@ -49,6 +59,24 @@ export default function DoubleExposureForm() {
             onChange={(e) => setText(e.target.value)}
             placeholder={t("double-exposure.placeholder.text")}
           />
+        </div>
+
+        <div className="flex items-center">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

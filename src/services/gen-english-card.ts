@@ -6,6 +6,7 @@ import { langToCountry } from "@/utils/302";
 interface GenerateEnglishCardParams {
   words: string;
   apiKey: string;
+  model?: string;
 }
 
 interface GenerateEnglishCardResult {
@@ -19,6 +20,7 @@ interface GenerateEnglishCardResult {
 export const generateEnglishCard = async ({
   words,
   apiKey,
+  model = "gpt-image-1",
 }: GenerateEnglishCardParams) => {
   try {
     const res = await ky.post("/api/gen-english-card", {
@@ -26,6 +28,7 @@ export const generateEnglishCard = async ({
       json: {
         words,
         apiKey,
+        model,
       },
     });
     return res.json<GenerateEnglishCardResult>();

@@ -11,11 +11,11 @@ interface HomeHeaderProps {
 
 export default function HomeHeader({ className }: HomeHeaderProps) {
   const t = useTranslations("home");
-  const isHidingBrand = useIsHideBrand();
+  const isHideBrand = useIsHideBrand();
 
   return (
     <div className={cn("flex items-center justify-center gap-2", className)}>
-      {!isHidingBrand && <AppLogo size="mini" height={32} width={32} />}
+      {isHideBrand ? null : <AppLogo size="mini" height={32} width={32} />}
       <h1 className="text-2xl font-bold">{t("header.title")}</h1>
     </div>
   );

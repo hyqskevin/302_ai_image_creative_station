@@ -9,6 +9,19 @@
     },
     "title": "コードを共有する必要がある"
   },
+  "common": {
+    "model": "モデル選択",
+    "enterPrompt": "プロンプトを入力してください",
+    "enterDuration": "動画の長さを選択してください",
+    "genVideo": "動画生成",
+    "prompt": "プロンプト",
+    "promptPlaceHolder": "動画生成のプロンプトを入力してください...",
+    "modelSelect": "モデル",
+    "duration": "時間",
+    "selectDuration": "時間を選択",
+    "gen": "動画生成",
+    "genrating": "生成中"
+  },
   "history": {
     "loading": "読み込み中...",
     "noHistoryTitle": "履歴がありません",
@@ -16,7 +29,7 @@
   },
   "home": {
     "header": {
-      "title": "AI画像創意サイト",
+      "title": "AI 画像クリエイティブステーション",
       "description": "画像の説明を入力すると、一言でクリエイティブを生成できます",
       "more": "その他の機能",
       "placeholder": "生成したい内容を入力してください 例：魔法の帽子をかぶったペンギン",
@@ -48,10 +61,14 @@
       "unknown_error": "不明なエラーが発生しました。サポートにお問い合わせください",
       "max_generation": "同時に生成できる画像は最大4枚までです",
       "empty_image": "画像をアップロードしてください",
-      "generate_failed": "生成に失敗しました"
+      "generate_failed": "生成に失敗しました",
+      "generating": "生成中..."
     },
+    "generating": "生成中...",
     "example": "参考効果",
     "generate_image": "画像生成",
+    "generate_success": "生成成功",
+    "generate_error": "生成失敗",
     "footer": {
       "copyright_content": "<logo></logo>による提供",
       "copyright_leading": "AI生成のコンテンツであり、参考用です"
@@ -105,10 +122,16 @@
   "basic": {
     "text2img": "テキストから画像",
     "styleEdit": "スタイル編集",
+    "styleModification": "画像修正",
+    "model": "モデル",
+    "select_model": "モデルを選択",
+    "style_description": "画像修正の説明",
     "input": {
       "placeholder": "画像の説明を入力してください...",
       "select": "言語を選択",
-      "style_description": "希望するスタイルの説明を入力してください..."
+      "style_description": "希望するスタイルの説明を入力してください...",
+      "style_edit_description": "例：キャラクターに帽子を追加する",
+      "style_edit_example": "キャラクターに帽子を追加する"
     },
     "language": {
       "en": "英語",
@@ -878,6 +901,418 @@
     "plastic_trash_bag": "プラスチックゴミ袋",
     "mini_scroll": "3Dミニスクロール",
     "shadow_art": "シルエットアート",
-    "cover_poster": "カバーポスター"
+    "cover_poster": "カバーポスター",
+    "mini_tilt_shift_landscape": "ミニチュアチルトシフト風景",
+    "q_version_keycap": "Qバージョンキーチェーン",
+    "mini_3d_shop": "3Dミニショップ",
+    "finger_nail_painting": "フィンガーネイルペイント",
+    "t_shirt_pin": "Tシャツピン",
+    "lego_city_landmark": "レゴシティランドマーク",
+    "word_and_graphic_fusion": "ワードとグラフィックの融合",
+    "3d_chrome_badge": "3Dクロームバッジ",
+    "animal_landmark_selfie": "動物ランドマークセルフィー",
+    "custom_anime_figure": "カスタムアニメフィギュア",
+    "glass_effect": "すりガラスシルエット効果",
+    "rusty_iron_plate": "錆びた鉄板",
+    "flowing_ink": "流れるインク",
+    "neon_graffiti": "ネオングラフィティ",
+    "grab_machine": "クレーンゲーム",
+    "creative_minimalist_ad": "クリエイティブミニマリスト広告",
+    "glass_fragment": "ガラスの破片",
+    "creative_drawstring_bag": "クリエイティブ巾着バッグ",
+    "flower_sculpture": "フラワースカルプチャー",
+    "succulent_pot": "多肉植物ポット",
+    "retro_science_fiction_book_cover": "レトロSF小説カバー",
+    "coin": "コイン",
+    "emotion_cake": "感情ケーキ",
+    "balloon": "ファンバルーン",
+    "monster_letter": "モンスター文字",
+    "toy_box_city": "おもちゃ箱の中の都市",
+    "threeD_people": "3D人形",
+    "flat_lay_photo": "フラットレイ写真",
+    "cartoon_to_real": "アニメ実写化"
+  },
+  "miniTiltShiftLandscape": {
+    "text": "ミニチュアチルトシフト風景",
+    "placeholder": {
+      "text": "スタイルや風景を入力してください 例：未来都市"
+    },
+    "defaultValue": {
+      "text": "未来都市"
+    }
+  },
+  "qVersionKeycap": {
+    "text": "Qバージョンキーチェーン",
+    "placeholder": {
+      "text": "テーマや説明を入力してください 例：未来都市"
+    },
+    "label": {
+      "description": "画像をアップロードしてください。AIがQバージョンキーチェーンに変換します"
+    }
+  },
+  "mini-3d-shop": {
+    "label": {
+      "storeType": "店舗タイプ",
+      "customStoreType": "カスタム",
+      "storeShape": "店舗の形",
+      "textSign": "店舗のスローガン",
+      "shop": "ショップ",
+      "supermarket": "スーパーマーケット",
+      "food": "食料品店",
+      "fruit": "果物店",
+      "custom": "カスタム"
+    },
+    "placeholder": {
+      "storeType": "店舗タイプを入力してください",
+      "customStoreType": "店舗タイプを入力してください 例：果物店",
+      "storeShape": "例：シャネルバッグ",
+      "textSign": "例：Bags"
+    },
+    "warning": {
+      "storeType": "店舗タイプを入力してください",
+      "customStoreType": "カスタムタイプを入力してください",
+      "storeShape": "店舗の形を入力してください",
+      "textSign": "店舗のスローガンを入力してください"
+    }
+  },
+  "finger_nail_painting": {
+    "label": {
+      "description": "画像をアップロードしてください。AIがフィンガーネイルペイントに変換します"
+    },
+    "placeholder": {
+      "text": "ネイルに描く内容を入力してください 例：モナリザ"
+    },
+    "defaultValue": {
+      "text": "モナリザ"
+    }
+  },
+  "t_shirt_pin": {
+    "label": {
+      "clothingColor": "Tシャツの色",
+      "description": "画像をアップロードしてください。AIがピンの模様に変換します"
+    },
+    "placeholder": {
+      "clothingColor": "例：#000000",
+      "description": "カラーコードを入力してください"
+    }
+  },
+  "lego_city_landmark": {
+    "placeholder": {
+      "text": "都市のランドマークを入力してください 例：北京頤和園",
+      "example": "北京頤和園"
+    }
+  },
+  "word_and_graphic_fusion": {
+    "placeholder": {
+      "text": "英単語を入力してください 例：cake",
+      "example": "cake"
+    }
+  },
+  "3d_chrome_badge": {
+    "label": {
+      "description": "バッジパターン",
+      "title": "上部タイトル",
+      "slogan": "下部タイトル",
+      "backgroundColor": "背景色",
+      "selectColor": "色を選択"
+    },
+    "placeholder": {
+      "description": "主題の説明を入力してください 例：犬",
+      "title": "タイトルを入力してください 例：犬",
+      "slogan": "スローガンを入力してください 例：人間の最も忠実な友",
+      "backgroundColor": "背景色を入力してください 例：#000000"
+    },
+    "defaultValue": {
+      "description": "犬",
+      "title": "犬",
+      "slogan": "人間の最も忠実な友",
+      "backgroundColor": "#000000"
+    }
+  },
+  "animal_landmark_selfie": {
+    "label": {
+      "animal": "動物種",
+      "landmark": "都市ランドマーク",
+      "expression1": "表情1",
+      "expression2": "表情2",
+      "expression3": "表情3"
+    },
+    "placeholder": {
+      "animal": "例：パンダ",
+      "landmark": "例：広州タワー",
+      "expression1": "例：喜び",
+      "expression2": "例：興奮",
+      "expression3": "例：落ち着き"
+    },
+    "defaultValue": {
+      "animal": "パンダ",
+      "landmark": "広州タワー",
+      "expression1": "喜び",
+      "expression2": "興奮",
+      "expression3": "落ち着き"
+    }
+  },
+  "custom_anime_figure": {
+    "placeholder": {
+      "text": "キャラクターの全身ポーズ、表情、衣装が分かる写真をアップロードしてください。フィギュアモデルを生成します。"
+    }
+  },
+  "glass_effect": {
+    "label": {
+      "subject": "ぼかし対象",
+      "color": "背景色",
+      "clearParts": "クリア部分"
+    },
+    "placeholder": {
+      "subject": "例：赤いライトセーバーを持つシスの暗黒卿",
+      "color": "例：#000000",
+      "clearParts": "例：暗黒フォースを集める別の手"
+    },
+    "defaultValue": {
+      "subject": "赤いライトセーバーを持つシスの暗黒卿",
+      "color": "#000000",
+      "clearParts": "暗黒フォースを集める別の手"
+    }
+  },
+  "rusty_iron_plate": {
+    "placeholder": {
+      "subject": "主題を入力してください 例：ティラノサウルス"
+    },
+    "defaultValue": {
+      "subject": "ティラノサウルス"
+    }
+  },
+  "flowing_ink": {
+    "placeholder": {
+      "subject": "主題を入力してください 例：鯉"
+    },
+    "defaultValue": {
+      "subject": "鯉"
+    }
+  },
+  "neon_graffiti": {
+    "label": {
+      "subject": "グラフィティの主題",
+      "color1": "色1",
+      "color2": "色2"
+    },
+    "placeholder": {
+      "subject": "主題を入力してください 例：スポーツカー",
+      "color1": "色1を入力してください 例：#000000",
+      "color2": "色2を入力してください 例：#000000"
+    },
+    "defaultValue": {
+      "subject": "スポーツカー",
+      "color1": "#000000",
+      "color2": "#000000"
+    }
+  },
+  "grab_machine": {
+    "label": {
+      "brandName": "機械のスローガン",
+      "machineColor": "機械の色",
+      "internalItems": "クレーンゲーム内のアイテム"
+    },
+    "placeholder": {
+      "brandName": "例：ハローキティ",
+      "machineColor": "例：#000000",
+      "internalItems": "例：ハローキティの人形、ハート"
+    },
+    "defaultValue": {
+      "brandName": "ハローキティ",
+      "machineColor": "#000000",
+      "internalItems": "ハローキティの人形、ハート"
+    }
+  },
+  "creative_minimalist_ad": {
+    "label": {
+      "object": "実物",
+      "text": "広告テキスト",
+      "logo": "ブランドロゴ"
+    },
+    "placeholder": {
+      "object": "例：口紅",
+      "text": "例：Launch Your Beauty",
+      "logo": "例：MAC"
+    },
+    "defaultValue": {
+      "object": "口紅",
+      "text": "Launch Your Beauty",
+      "logo": "MAC"
+    }
+  },
+  "glass_fragment": {
+    "placeholder": {
+      "subject": "主題を入力してください 例：マイリトルポニー"
+    },
+    "defaultValue": {
+      "subject": "マイリトルポニー"
+    }
+  },
+  "creative_drawstring_bag": {
+    "label": {
+      "backgroundColor": "背景色",
+      "itemsInBag": "バッグ内のアイテム",
+      "ribbonColor": "リボンの色",
+      "labelColor": "ラベルの色",
+      "labelText": "ラベルテキスト"
+    },
+    "placeholder": {
+      "backgroundColor": "例：#000000",
+      "itemsInBag": "例：カットスイカ",
+      "ribbonColor": "例：#000000",
+      "labelColor": "例：#000000",
+      "labelText": "例：Watermelon"
+    },
+    "defaultValue": {
+      "backgroundColor": "#000000",
+      "itemsInBag": "カットスイカ",
+      "ribbonColor": "#000000",
+      "labelColor": "#000000",
+      "labelText": "Watermelon"
+    }
+  },
+  "flower_sculpture": {
+    "label": {
+      "subject": "彫刻の主題",
+      "flowerVarietiesUsed": "花の種類",
+      "backgroundColor": "背景色"
+    },
+    "placeholder": {
+      "subject": "例：弓と矢",
+      "flowerVarietiesUsed": "例：バラ、チューリップ、ラナンキュラス",
+      "backgroundColor": "#000000"
+    },
+    "defaultValue": {
+      "subject": "弓と矢",
+      "flowerVarietiesUsed": "バラ、チューリップ、ラナンキュラス",
+      "backgroundColor": "#000000"
+    }
+  },
+  "succulent_pot": {
+    "placeholder": {
+      "potShape": "鉢の形を入力してください 例：イルカ"
+    },
+    "defaultValue": {
+      "potShape": "イルカ"
+    }
+  },
+  "retro_science_fiction_book_cover": {
+    "label": {
+      "subject": "表紙の主題"
+    },
+    "placeholder": {
+      "subject": "例：ハムスターの攻撃",
+      "color1": "例：#000000",
+      "color2": "例：#000000"
+    },
+    "defaultValue": {
+      "subject": "ハムスターの攻撃",
+      "color1": "#000000",
+      "color2": "#000000"
+    }
+  },
+  "coin": {
+    "label": {
+      "year": "年",
+      "bottomText": "下部テキスト",
+      "coinPattern": "コインのパターン"
+    },
+    "placeholder": {
+      "year": "例：2025",
+      "bottomText": "例：Netflix",
+      "coinPattern": "例：Netflixロゴ"
+    },
+    "defaultValue": {
+      "year": "2025",
+      "bottomText": "Netflix",
+      "coinPattern": "Netflixロゴ"
+    }
+  },
+  "emotion_cake": {
+    "label": {
+      "pastryType": "ペストリータイプ",
+      "emotion": "感情表現",
+      "backgroundColor": "背景色"
+    },
+    "placeholder": {
+      "pastryType": "例：クロワッサン",
+      "emotion": "例：困惑",
+      "backgroundColor": "例：#000000"
+    },
+    "defaultValue": {
+      "pastryType": "クロワッサン",
+      "emotion": "困惑",
+      "backgroundColor": "#000000"
+    }
+  },
+  "balloon": {
+    "label": {
+      "body": "風船の主題",
+      "backgroundColor": "背景色"
+    },
+    "placeholder": {
+      "body": "例：パイナップル",
+      "backgroundColor": "例：#000000"
+    },
+    "defaultValue": {
+      "body": "パイナップル",
+      "backgroundColor": "#000000"
+    }
+  },
+  "monster_letter": {
+    "label": {
+      "lettersOrWords": "文字や単語",
+      "colorTone": "色",
+      "emotionalExpression": "感情"
+    },
+    "placeholder": {
+      "lettersOrWords": "例：AI",
+      "colorTone": "例：ピンク、ライトグリーン",
+      "emotionalExpression": "例：泣いている、幸せ"
+    },
+    "defaultValue": {
+      "lettersOrWords": "AI",
+      "colorTone": "ピンク、ライトグリーン",
+      "emotionalExpression": "泣いている、幸せ"
+    }
+  },
+  "toy_box_city": {
+    "label": {
+      "countryOrCityName": "国や都市の名前"
+    },
+    "placeholder": {
+      "countryOrCityName": "国や都市の名前を入力してください 例：古代エジプト"
+    },
+    "defaultValue": {
+      "countryOrCityName": "古代エジプト"
+    }
+  },
+  "threeD_people": {
+    "warning": {
+      "image": "キャラクター画像をアップロードしてください",
+      "text": "内容を入力してください"
+    },
+    "label": {
+      "description": "キャラクター画像をアップロードしてください。AIが3D人形フィギュアに変換します"
+    }
+  },
+  "flat_lay_photo": {
+    "warning": {
+      "image": "キャラクター画像をアップロードしてください",
+      "text": "内容を入力してください"
+    },
+    "label": {
+      "description": "キャラクター画像をアップロードしてください。AIが服装やアクセサリーをフラットレイ展示に変換します"
+    }
+  },
+  "cartoon_to_real": {
+    "warning": {
+      "image": "キャラクター画像をアップロードしてください",
+      "text": "内容を入力してください"
+    },
+    "label": {
+      "description": "画像をアップロードしてください。AIが実写版コスプレ写真に変換します"
+    }
   }
 }

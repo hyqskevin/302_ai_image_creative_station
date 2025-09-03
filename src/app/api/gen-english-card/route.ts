@@ -4,42 +4,124 @@ import {
   generateText,
 } from "ai";
 import { createAI302 } from "@302ai/ai-sdk";
-import { createScopedLogger } from "@/utils";
+import { createScopedLogger, generateFluxKontextImage } from "@/utils";
 import { env } from "@/env";
 import ky from "ky";
 import prompts from "@/constants/prompts";
 
 const logger = createScopedLogger("gen-english-card");
 
+interface DeepLTranslation {
+  detected_source_language?: string;
+  text: string;
+}
+
+interface DeepLResponse {
+  translations: DeepLTranslation[];
+}
+
+// 翻译函数
+async function translateToEnglish(
+  text: string,
+  apiKey: string
+): Promise<string> {
+  try {
+    const response = await ky.post(
+      `${env.NEXT_PUBLIC_API_URL}/deepl/v2/translate`,
+      {
+        headers: {
+          Authorization: `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        json: {
+          text: [text],
+          target_lang: "EN",
+        },
+      }
+    );
+
+    const result = (await response.json()) as DeepLResponse;
+    logger.info("translation-success", { result });
+
+    if (result.translations && result.translations.length > 0) {
+      return result.translations[0].text;
+    } else {
+      throw new Error("No translations found in response");
+    }
+  } catch (error) {
+    logger.error("Failed to translate text", error);
+    // 如果翻译失败，返回原文
+    return text;
+  }
+}
+
 export async function POST(request: Request) {
   try {
     const {
       words,
       apiKey,
+      model = "gpt-image-1",
     }: {
       words: string;
       apiKey: string;
+      model?: "gpt-image-1" | "flux-kontext-pro" | "flux-kontext-max";
     } = await request.json();
     const ai302 = createAI302({
       apiKey,
       baseURL: env.NEXT_PUBLIC_API_URL,
     });
 
-    const { image }: any = await generateImage({
-      model: ai302.image("gpt-image-1"),
-      prompt: `Translate the words entered by the user into English and create word cards with both text and images. The generated quality can be used for course educational materials. The background color of the card is cream.
-      ${words}
-      `,
-    });
+    const prompt = `Translate the words entered by the user into English and create word cards with both text and images. The generated quality can be used for course educational materials. The background color of the card is cream.
+    ${words}
+    `;
+
+    let newImage: any;
+
+    if (model === "flux-kontext-pro" || model === "flux-kontext-max") {
+      // 翻译提示词为英文
+      const englishPrompt = await translateToEnglish(prompt, apiKey);
+      logger.info("Translated prompt for Flux-Kontext-Pro", {
+        original: prompt,
+        translated: englishPrompt,
+      });
+
+      // 使用Flux Kontext Pro模型生成图像
+      const base64Image = await generateFluxKontextImage(
+        env.NEXT_PUBLIC_API_URL,
+        englishPrompt,
+        apiKey,
+        undefined,
+        model
+      );
+
+      newImage = {
+        base64Data: base64Image,
+      };
+    } else {
+      // 使用默认的GPT-4o模型生成图像
+      console.log("model是", model);
+
+      const { image }: any = await generateImage({
+        model: ai302.image(model),
+        providerOptions: {
+          google: { responseModalities: ["IMAGE"] },
+        },
+        prompt: `${prompt},结果只输出图片url，不要输出文字！`,
+      });
+      console.log("modelmodelmodelmodel", model);
+      console.log("imageimageimageimage", image);
+
+      newImage = image;
+    }
 
     logger.info("Image generated successfully");
-    console.log("image", image);
 
     // Upload the generated base64 image to the server
     try {
       // Convert base64 to blob
       const base64Response = await fetch(
-        `data:image/png;base64,${image.base64 || image.base64Data}`
+        `data:image/png;base64,${newImage.base64 || newImage.base64Data}`
       );
       const blob = await base64Response.blob();
 
@@ -64,9 +146,10 @@ export async function POST(request: Request) {
 
         return Response.json({
           image: {
-            image: image.base64Data,
+            image: newImage.base64Data || newImage.base64,
             imageUrl: uploadResponse.data.url,
             prompt: words,
+            model: model,
           },
         });
       } else {
@@ -78,8 +161,9 @@ export async function POST(request: Request) {
       // If upload fails, still return the base64 image
       return Response.json({
         image: {
-          image: image.base64,
+          image: newImage.base64 || newImage.base64Data,
           prompt: words,
+          model: model,
           uploadError: "Failed to upload the image to server",
         },
       });

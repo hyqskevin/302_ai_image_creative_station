@@ -15,7 +15,14 @@ import { toast } from "sonner";
 import { letterBoxPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
 import { HexColorPicker } from "react-colorful";
-
+import { models } from "@/constants/models";
+import {
+  Select,
+  SelectItem,
+  SelectContent,
+  SelectValue,
+  SelectTrigger,
+} from "@/components/ui/select";
 export default function LetterBoxForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
@@ -28,7 +35,7 @@ export default function LetterBoxForm() {
   const [backgroundColor, setBackgroundColor] = useState("#FFFFFF");
   const [characters, setCharacters] = useState("");
   const [material, setMaterial] = useState("");
-
+  const [model, setModel] = useState("gpt-image-1");
   const characterColorRef = useRef<HTMLDivElement>(null);
   const backgroundColorRef = useRef<HTMLDivElement>(null);
   const characterPickerRef = useRef<HTMLDivElement>(null);
@@ -120,12 +127,30 @@ export default function LetterBoxForm() {
         backgroundColor || defaultValues.backgroundColor
       ),
       type: "letter_box",
+      model: model,
     });
   };
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           {/* Character Input */}
           <div className="space-y-2">

@@ -15,6 +15,14 @@ import { styleFormAtom } from "@/stores/slices/style_form_store";
 import ky from "ky";
 import ChangeImage from "./img";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 const ChangeStyle = () => {
   const t = useTranslations();
@@ -22,6 +30,7 @@ const ChangeStyle = () => {
   const [actionReferenceImages, setActionReferenceImages] = useAtom(
     actionReferenceImagesStoreAtom
   );
+
   const setActionImage = (image: string) => {
     setActionReferenceImages({
       ...actionReferenceImages,

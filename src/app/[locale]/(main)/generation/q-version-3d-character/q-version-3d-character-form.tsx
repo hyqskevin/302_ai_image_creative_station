@@ -17,13 +17,21 @@ import { appConfigAtom, store } from "@/stores";
 import ImageDrop from "@/components/basic/change-style/text/image-drop";
 import { Card } from "@/components/ui/card";
 import { useTranslations } from "next-intl";
-
+import { imageEditModels, models } from "@/constants/models";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 export default function QVersion3DCharacterForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
   const { isGenerating, generateWithImage } = useImageGeneration();
   const t = useTranslations();
+  const [model, setModel] = useState("gpt-image-1");
 
   const handleGenerate = async () => {
     if (!imageForm) {
@@ -37,6 +45,7 @@ export default function QVersion3DCharacterForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "q_version_3d_character",
+      model: model,
     });
   };
 
@@ -59,6 +68,24 @@ export default function QVersion3DCharacterForm() {
             <Label className="mb-2 mr-1 text-sm font-medium sm:mb-0">
               {t("q-version-3d-character.label.description")}
             </Label>
+          </div>
+
+          <div className="flex items-center">
+            <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger id="model-select" className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[...models, ...imageEditModels].map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">

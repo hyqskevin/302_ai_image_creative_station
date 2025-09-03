@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { models } from "@/constants/models";
 
 export default function HandwritingNoteForm() {
   const [noteType, setNoteType] = useState<
@@ -34,6 +35,7 @@ export default function HandwritingNoteForm() {
   const [layout, setLayout] = useState("vertical");
   const [language, setLanguage] = useState<"zh" | "en" | "ja">("zh");
   const locale = useLocale();
+  const [model, setModel] = useState("gpt-image-1");
 
   useEffect(() => {
     setText("");
@@ -69,12 +71,30 @@ export default function HandwritingNoteForm() {
       customOptimizePrompt: prompt,
       size: "1024x1536",
       type: "handwriting_note",
+      model: model,
     });
   };
 
   return (
     <div className="mx-auto max-w-2xl">
       <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-20 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="flex items-center gap-4">
           <Label htmlFor="noteType" className="w-20 flex-shrink-0">
             {t("handwriting-note.label.type")}

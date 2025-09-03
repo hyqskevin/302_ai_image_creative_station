@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { MediaItemProps } from "./gallery";
 import { Image } from "@/components/ui/image";
 import { IconButton } from "@/components/ui/icon-button";
 import { Tag } from "@/components/ui/tag";
 import { useTranslations } from "next-intl";
+import { VideoIcon, PlayIcon } from "lucide-react";
+import { VideoModal } from "./video-modal";
+import { VideoPlayerModal } from "./video-player-modal";
 
 export const MediaItem = ({
   item,
@@ -12,8 +16,75 @@ export const MediaItem = ({
   onDownload,
   showActions = true,
   showTag = true,
+  onVideoGenerated,
 }: MediaItemProps) => {
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [isVideoPlayerOpen, setIsVideoPlayerOpen] = useState(false);
   const t = useTranslations();
+
+  const handleVideoModalClose = (isOutsideClick?: boolean) => {
+    setIsVideoModalOpen(false);
+
+    // 只有在外部点击关闭时才阻止事件传播
+    if (isOutsideClick) {
+      // 临时阻止点击事件传播
+      const preventNextClick = (e: Event) => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        document.removeEventListener("click", preventNextClick, {
+          capture: true,
+        });
+      };
+
+      // 在捕获阶段添加一次性监听器
+      setTimeout(() => {
+        document.addEventListener("click", preventNextClick, {
+          capture: true,
+          once: true,
+        });
+      }, 0);
+    }
+  };
+
+  const handleVideoPlayerClose = (isOutsideClick?: boolean) => {
+    setIsVideoPlayerOpen(false);
+
+    // 只有在外部点击关闭时才阻止事件传播
+    if (isOutsideClick) {
+      // 临时阻止点击事件传播
+      const preventNextClick = (e: Event) => {
+        e.stopImmediatePropagation();
+        e.preventDefault();
+        document.removeEventListener("click", preventNextClick, {
+          capture: true,
+        });
+      };
+
+      // 在捕获阶段添加一次性监听器
+      setTimeout(() => {
+        document.addEventListener("click", preventNextClick, {
+          capture: true,
+          once: true,
+        });
+      }, 0);
+    }
+  };
+
+  const handleImageClick = (e: React.MouseEvent<HTMLImageElement>) => {
+    // 如果模态框正在开启状态，不触发图片点击
+    if (isVideoModalOpen || isVideoPlayerOpen) {
+      e.stopPropagation();
+      return;
+    }
+
+    // 视频类型不应该触发图片放大，播放图标会处理点击
+    if (item.type === "video") {
+      e.stopPropagation();
+      return;
+    }
+
+    onClick?.(e);
+  };
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
     onDelete?.(item);
@@ -36,6 +107,38 @@ export const MediaItem = ({
             <Tag>{item.tag}</Tag>
           </div>
         )}
+
+        {/* 视频播放图标 - 如果是视频类型显示播放图标 */}
+        {item.type === "video" && item.videoUrl && (
+          <div
+            className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center"
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsVideoPlayerOpen(true);
+            }}
+          >
+            <div className="rounded-full bg-black/50 p-4 backdrop-blur-sm transition-colors hover:bg-black/70">
+              <PlayIcon className="h-8 w-8 text-white" />
+            </div>
+          </div>
+        )}
+
+        {/* Video generation icon in top right corner - only show for images when status is success or undefined */}
+        {item.type !== "video" &&
+          item.type !== "video-pending" &&
+          (!item.status || item.status === "success") && (
+            <div
+              className="absolute right-3 top-3 z-10 cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                setIsVideoModalOpen(true);
+              }}
+            >
+              <div className="rounded-full bg-black/50 p-2 backdrop-blur-sm transition-colors hover:bg-black/70">
+                <VideoIcon className="h-4 w-4 text-white" />
+              </div>
+            </div>
+          )}
 
         {item.status === "pending" && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/30">
@@ -126,9 +229,24 @@ export const MediaItem = ({
           }
           alt={item.title}
           className="h-full w-full cursor-pointer object-cover"
-          onClick={onClick}
+          onClick={handleImageClick}
         />
       </div>
+
+      {/* Video Generation Modal */}
+      <VideoModal
+        item={item}
+        isOpen={isVideoModalOpen}
+        onClose={handleVideoModalClose}
+        onVideoGenerated={onVideoGenerated}
+      />
+
+      {/* Video Player Modal */}
+      <VideoPlayerModal
+        item={item}
+        isOpen={isVideoPlayerOpen}
+        onClose={handleVideoPlayerClose}
+      />
     </div>
   );
 };

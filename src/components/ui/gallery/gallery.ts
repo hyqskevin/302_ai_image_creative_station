@@ -8,6 +8,9 @@ export interface MediaItemType {
   historyId?: string;
   status?: "pending" | "success" | "failed";
   type?: string;
+  // 视频相关字段
+  videoUrl?: string;
+  coverUrl?: string;
 }
 
 export interface BaseProps {
@@ -26,6 +29,15 @@ export interface GalleryProps extends ActionProps {
   insertAtStart?: boolean;
   emptyStateMessage?: string;
   pageSize?: number;
+  onVideoGenerated?: (
+    taskId: string,
+    videoData: {
+      prompt: string;
+      model: string;
+      duration: string;
+      sourceImageBase64: string;
+    }
+  ) => void; // 视频生成回调
 }
 
 export interface MediaItemProps extends BaseProps, ActionProps {
@@ -33,6 +45,15 @@ export interface MediaItemProps extends BaseProps, ActionProps {
   onClick?: (e: React.MouseEvent<HTMLImageElement>) => void;
   showActions?: boolean;
   showTag?: boolean;
+  onVideoGenerated?: (
+    taskId: string,
+    videoData: {
+      prompt: string;
+      model: string;
+      duration: string;
+      sourceImageBase64: string;
+    }
+  ) => void; // 视频生成回调
 }
 
 export interface GalleryModalProps extends ActionProps {

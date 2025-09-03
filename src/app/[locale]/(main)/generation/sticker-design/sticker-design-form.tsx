@@ -19,6 +19,8 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
+import { Label } from "@/components/ui/label";
 
 export default function StickerDesignForm() {
   const t = useTranslations();
@@ -29,7 +31,31 @@ export default function StickerDesignForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
+  // 为每个标签页维护独立的模型选择状态
+  const [textModel, setTextModel] = useState("gpt-image-1");
+  const [uploadModel, setUploadModel] = useState("gpt-image-1");
 
+  // 根据当前标签页获取可用的模型列表
+  const getAvailableModels = () => {
+    if (activeTab === "upload") {
+      return [...models, ...imageEditModels];
+    }
+    return models; // text 模式只使用基础模型
+  };
+
+  // 获取当前活动标签页的模型
+  const getCurrentModel = () => {
+    return activeTab === "text" ? textModel : uploadModel;
+  };
+
+  // 设置当前活动标签页的模型
+  const setCurrentModel = (model: string) => {
+    if (activeTab === "text") {
+      setTextModel(model);
+    } else {
+      setUploadModel(model);
+    }
+  };
   const handleGenerate = async () => {
     if (activeTab === "text") {
       const text = inputRef.current?.value;
@@ -45,6 +71,7 @@ export default function StickerDesignForm() {
         prompt: textPrompt(text || defaultValues.text)[style],
         shouldUseImageInput: false,
         type: "sticker_design",
+        model: getCurrentModel(),
       });
     }
 
@@ -59,6 +86,8 @@ export default function StickerDesignForm() {
         prompt: uploadImagePrompt()[style],
         imageData: imageForm,
         shouldUseImageInput: true,
+        model: getCurrentModel(),
+        type: "sticker_design",
       });
     }
   };
@@ -128,6 +157,23 @@ export default function StickerDesignForm() {
                   <SelectItem value="anime">
                     {t("sticker-design.style.anime")}
                   </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center">
+              <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+                {t("common.model")}
+              </Label>
+              <Select value={getCurrentModel()} onValueChange={setCurrentModel}>
+                <SelectTrigger id="model-select" className="w-full">
+                  <SelectValue placeholder={t("common.model")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {getAvailableModels().map((modelOption) => (
+                    <SelectItem key={modelOption} value={modelOption}>
+                      {modelOption}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>

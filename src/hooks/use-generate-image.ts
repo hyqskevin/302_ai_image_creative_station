@@ -13,6 +13,8 @@ type GenerateImageOptions = {
   customOptimizePrompt?: string;
   size?: "1536x1024" | "1024x1024" | "1024x1536";
   type?: string;
+  model?: string;
+  sourceLang?: "ZH" | "EN";
 };
 
 export function useGenerateImage() {
@@ -42,7 +44,7 @@ export function useGenerateImage() {
         image: {
           base64: "",
           prompt: options.prompt,
-          model: "",
+          model: options.model || "",
           status: "pending",
           size: options.size,
           type: options.type || "",
@@ -55,6 +57,8 @@ export function useGenerateImage() {
         isOptimize: options.isOptimize,
         customOptimizePrompt: options.customOptimizePrompt,
         size: options.size,
+        model: options.model,
+        sourceLang: options.sourceLang,
       });
 
       updateHistory(historyId, {
@@ -63,7 +67,7 @@ export function useGenerateImage() {
         image: {
           base64: "data:image/png;base64," + image.images[0].base64Data,
           prompt: options.prompt,
-          model: "",
+          model: options.model || "",
           status: "success",
           type: options.type,
         },

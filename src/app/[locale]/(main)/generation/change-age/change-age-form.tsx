@@ -24,9 +24,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
 
 export default function ChangeAgeForm() {
   const [age, setAge] = useState<number>();
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
@@ -49,6 +51,7 @@ export default function ChangeAgeForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "change_age",
+      model: model,
     });
   };
 
@@ -78,6 +81,24 @@ export default function ChangeAgeForm() {
               onChange={(e) => setAge(Number(e.target.value))}
               className="w-full"
             />
+          </div>
+
+          <div className="mb-4 flex w-full flex-col space-y-2">
+            <Label className="mb-2 mr-1 whitespace-nowrap text-sm font-medium sm:mb-0">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[...models, ...imageEditModels].map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">

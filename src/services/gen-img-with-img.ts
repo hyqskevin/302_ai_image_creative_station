@@ -7,6 +7,9 @@ interface GenerateImageParams {
   apiKey: string;
   img?: string;
   prompt?: string;
+  size?: "1024x1024" | "1536x1024" | "1024x1536";
+  model?: string;
+  sourceLang?: string;
 }
 
 interface GenerateImageResult {
@@ -29,6 +32,9 @@ export const genImgWithImg = async ({
   apiKey,
   img,
   prompt,
+  size,
+  model = "gpt-image-1",
+  sourceLang = "ZH",
 }: GenerateImageParams) => {
   try {
     const res = await ky.post("/api/gen-img-with-img", {
@@ -41,6 +47,9 @@ export const genImgWithImg = async ({
         img,
         prompt,
         apiKey,
+        size,
+        model,
+        sourceLang,
       },
     });
     return res.json<GenerateImageResult>();

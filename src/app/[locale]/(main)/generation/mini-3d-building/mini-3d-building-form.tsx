@@ -14,9 +14,18 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { mini3dBuildingPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { models } from "@/constants/models";
 
 export default function Mini3dBuildingForm() {
   const [text, setText] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
@@ -35,6 +44,7 @@ export default function Mini3dBuildingForm() {
       prompt: mini3dBuildingPrompt(text || defaultValues.text),
       isOptimize: true,
       type: "mini_3d_building",
+      model: model,
     });
   };
 
@@ -51,6 +61,24 @@ export default function Mini3dBuildingForm() {
             onChange={(e) => setText(e.target.value)}
             placeholder={t("mini-3d-building.placeholder.text")}
           />
+        </div>
+
+        <div className="flex items-center">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

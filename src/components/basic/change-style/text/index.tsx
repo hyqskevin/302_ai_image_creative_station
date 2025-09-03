@@ -7,12 +7,14 @@ import { actionReferenceImagesStoreAtom } from "@/stores/slices/action_reference
 import { styleFormAtom } from "@/stores/slices/style_form_store";
 import { useAtom } from "jotai";
 import { useTranslations } from "next-intl";
+import { useTranslations as useNextIntlTranslations } from "next-intl";
 import React, { useState } from "react";
 import { Label } from "recharts";
 import ky from "ky";
 import { logger } from "@/utils/logger";
 import { appConfigAtom, store } from "@/stores";
 import { generationStoreAtom } from "@/stores/slices/generation_store";
+import { env } from "@/env";
 // 风格示例数据
 // All available styles
 const allStyles = [
@@ -55,18 +57,21 @@ const urlToFile = async (url: string, filename: string): Promise<File> => {
 
 const Text = () => {
   const t = useTranslations();
+  const tEn = useNextIntlTranslations("en");
   const [styleForm, setStyleForm] = useAtom(styleFormAtom);
   const { addHistory, updateHistory } = useHistory();
   const [actionReferenceImages, setActionReferenceImages] = useAtom(
     actionReferenceImagesStoreAtom
   );
   const { apiKey } = store.get(appConfigAtom);
+  const [style, setStyle] = useState<string>("");
   const [generationCount, setGenerationCount] = useAtom(generationStoreAtom);
-  const onClick = (style: string) => {
+  const onClick = (style: string, styleEn: string) => {
     setStyleForm({
       ...styleForm,
       prompt: style,
     });
+    setStyle(styleEn);
   };
 
   const handleGenerateTextToImage = async () => {
@@ -92,7 +97,11 @@ const Text = () => {
     const formdata = new FormData();
     let imageFile;
     const actionImage = actionReferenceImages.actionImage;
-    if (actionImage && actionImage.startsWith("http")) {
+    if (
+      actionImage &&
+      typeof actionImage === "string" &&
+      actionImage.startsWith("http")
+    ) {
       try {
         // Extract filename from URL or use a default name
         const filename = actionImage.split("/").pop() || "image.jpg";
@@ -113,6 +122,7 @@ const Text = () => {
     formdata.append("prompt", styleForm.prompt);
     formdata.append("model", "gpt-image-1");
     let historyId = "";
+    let data: any = null;
     try {
       historyId = await addHistory({
         rawPrompt: styleForm.prompt,
@@ -125,6 +135,8 @@ const Text = () => {
           type: "realistic_photo",
         },
       });
+
+      // 原有的gpt-image-1处理逻辑
       const result = await ky
         .post("https://api.302.ai/v1/images/edits", {
           headers: {
@@ -136,14 +148,12 @@ const Text = () => {
         .text();
       // Parse the response to get the image URL
       const responseData = JSON.parse(result);
-
-      const data = responseData?.data?.[0];
-
+      data = responseData?.data?.[0];
       updateHistory(historyId, {
         rawPrompt: styleForm.prompt,
         shouldOptimize: false,
         image: {
-          base64: data.url,
+          base64: "data:image/png;base64," + data.b64_json,
           prompt: styleForm.prompt,
           model: "gpt-image-1",
           status: "success",
@@ -206,7 +216,9 @@ const Text = () => {
               variant="outline"
               size="sm"
               className={`h-8 text-xs`}
-              onClick={() => onClick(t(`styles.${style}`))}
+              onClick={() =>
+                onClick(t(`styles.${style}`), tEn(`styles.${style}`))
+              }
             >
               {t(`styles.${style}`)}
             </Button>

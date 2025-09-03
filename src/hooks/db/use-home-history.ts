@@ -7,7 +7,7 @@ import { useCallback } from "react";
 import { AddHistory } from "@/db/types";
 
 const logger = createScopedLogger("use-gen-history");
-const PAGE_SIZE = 16;
+const PAGE_SIZE = 18;
 
 export const useHomeHistory = (page = 1, pageSize = PAGE_SIZE) => {
   const offset = (page - 1) * pageSize;

@@ -26,8 +26,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { models } from "@/constants/models";
 
 export default function CoverPosterForm() {
+  const [model, setModel] = useState("gpt-image-1");
   // 类型
   const [coverType, setCoverType] = useState<
     "colorSvg" | "magzineCover" | "vintageCover"
@@ -174,12 +176,30 @@ export default function CoverPosterForm() {
       customOptimizePrompt: prompt,
       size: "1536x1024",
       type: "cover_poster",
+      model,
     });
   };
 
   return (
     <div className="mx-auto max-w-4xl">
       <div className="space-y-6">
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="w-full">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
         <div className="flex w-full items-center">
           <Label htmlFor="noteType" className="w-20">
             {t("cover-poster.label.type")}

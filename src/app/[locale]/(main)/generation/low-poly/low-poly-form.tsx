@@ -14,9 +14,18 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { lowPolyPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { models } from "@/constants/models";
 
 export default function LowPolyForm() {
   const [text, setText] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
@@ -33,6 +42,7 @@ export default function LowPolyForm() {
       prompt: lowPolyPrompt(text || defaultValues.text),
       isOptimize: true,
       type: "low_poly",
+      model: model,
     });
   };
 
@@ -46,6 +56,24 @@ export default function LowPolyForm() {
             onChange={(e) => setText(e.target.value)}
             placeholder={t("low-poly.placeholder.text")}
           />
+        </div>
+
+        <div className="flex items-center gap-4">
+          <Label htmlFor="model-select" className="whitespace-nowrap text-sm">
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="flex-1">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

@@ -8,6 +8,7 @@ interface GenerateImageParams {
   originImage?: string;
   referenceImage?: string;
   prompt?: string;
+  model?: "gpt-image-1" | "Flux-Kontext-Pro";
 }
 
 interface GenerateImageResult {
@@ -30,6 +31,7 @@ export const generateStyleImage = async ({
   apiKey,
   originImage,
   referenceImage,
+  model = "gpt-image-1",
 }: GenerateImageParams) => {
   try {
     const res = await ky.post("/api/gen-style-reference-image", {
@@ -42,6 +44,7 @@ export const generateStyleImage = async ({
         originImage,
         referenceImage,
         apiKey,
+        model,
       },
     });
     return res.json<GenerateImageResult>();

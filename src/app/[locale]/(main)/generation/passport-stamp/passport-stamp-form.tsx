@@ -14,12 +14,22 @@ import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { passportStampPrompt } from "./prompt";
 import { useTranslations } from "next-intl";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { models } from "@/constants/models";
+
 export default function PassportStampForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [city, setCity] = useState("");
   const [country, setCountry] = useState("");
   const [landmarks, setLandmarks] = useState("");
   const [date, setDate] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const { isGenerating, generateImg } = useGenerateImage();
   const t = useTranslations();
   const handleGenerate = async () => {
@@ -57,6 +67,7 @@ export default function PassportStampForm() {
         date || defaultValues.date
       ),
       type: "passport_stamp",
+      model: model,
     });
   };
 
@@ -113,6 +124,27 @@ export default function PassportStampForm() {
             placeholder={t("passport-stamp.placeholder.date")}
             className="flex-1"
           />
+        </div>
+
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+          <Label
+            htmlFor="model-select"
+            className="w-16 flex-shrink-0 text-wrap"
+          >
+            {t("common.model")}
+          </Label>
+          <Select value={model} onValueChange={setModel}>
+            <SelectTrigger id="model-select" className="flex-1">
+              <SelectValue placeholder={t("common.model")} />
+            </SelectTrigger>
+            <SelectContent>
+              {models.map((modelOption) => (
+                <SelectItem key={modelOption} value={modelOption}>
+                  {modelOption}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         <div className="flex items-center justify-end space-x-4">

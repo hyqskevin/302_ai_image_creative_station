@@ -13,17 +13,24 @@ import { examples } from "./examples";
 import { useImageGeneration } from "@/hooks/use-image-generation";
 import { toast } from "sonner";
 import { changeAgePrompt } from "./prompt";
-import { appConfigAtom, store } from "@/stores";
 import ImageDrop from "@/components/basic/change-style/text/image-drop";
 import { Card } from "@/components/ui/card";
-
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
 
 export default function DollForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const [accessories, setAccessories] = useState("");
+  const [model, setModel] = useState("gpt-image-1");
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageForm, setImageForm] = useState("");
   const { isGenerating, generateWithImage } = useImageGeneration();
@@ -54,6 +61,7 @@ export default function DollForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "doll",
+      model: model,
     });
   };
 
@@ -108,6 +116,24 @@ export default function DollForm() {
                 className="w-full"
               />
             </div>
+          </div>
+
+          <div className="flex w-full flex-col space-y-2">
+            <Label className="mr-1 whitespace-nowrap text-sm font-medium sm:mb-0">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {[...models].map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">

@@ -5,6 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useGenerateImage } from "@/hooks/use-generate-image";
 import { toast } from "sonner";
 import { useAtom } from "jotai";
@@ -14,6 +21,7 @@ import { leftPagePrompt } from "./prompt";
 import { rightPagePrompt } from "./prompt";
 import { useIsMobile } from "@/hooks/global/use-mobile";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
 
 export default function AncientBookForm() {
   const [style, setStyle] = useState("handdrawn");
@@ -22,6 +30,7 @@ export default function AncientBookForm() {
   const [leftPage, setLeftPage] = useState<string>("ancient-book");
   const [rightPage, setRightPage] = useState<string>("miniature-scene");
   const [text, setText] = useState<string>("");
+  const [model, setModel] = useState("gpt-image-1");
   const isMobile = useIsMobile();
   const t = useTranslations();
 
@@ -69,6 +78,7 @@ export default function AncientBookForm() {
       rawPrompt: `${text || defaultValues.text}`,
       prompt,
       type: "ancient_book",
+      model: model,
     });
   };
 
@@ -149,6 +159,28 @@ export default function AncientBookForm() {
                 </Label>
               </div>
             </RadioGroup>
+          </div>
+
+          {/* Model Selection */}
+          <div className="flex flex-col gap-2 md:flex-row md:items-center md:gap-4">
+            <Label
+              htmlFor="model-select"
+              className="whitespace-nowrap font-medium md:w-20 md:text-right"
+            >
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger id="model-select" className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
 
           {/* Generate Button */}

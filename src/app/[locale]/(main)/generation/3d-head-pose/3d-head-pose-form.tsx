@@ -18,6 +18,7 @@ export default function ThreeDHeadPoseForm() {
         text: t("3d-head-pose.defaultValue"),
       }}
       imgDescription={t("3d-head-pose.label.description")}
+      editImage={false}
     />
   );
 }

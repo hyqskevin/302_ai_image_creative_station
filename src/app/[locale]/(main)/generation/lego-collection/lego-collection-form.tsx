@@ -24,6 +24,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { useTranslations } from "next-intl";
+import { imageEditModels, models } from "@/constants/models";
 
 export default function LegoCollectionForm() {
   const [exampleStore, setExampleStore] = useAtom(exampleStoreAtom);
@@ -31,6 +32,7 @@ export default function LegoCollectionForm() {
   const [imageForm, setImageForm] = useState("");
   const { isGenerating, generateWithImage } = useImageGeneration();
   const t = useTranslations();
+  const [model, setModel] = useState("gpt-image-1");
 
   const handleGenerate = async () => {
     if (!imageForm) {
@@ -44,6 +46,7 @@ export default function LegoCollectionForm() {
       imageData: imageForm,
       shouldUseImageInput: true,
       type: "lego_collection",
+      model: model,
     });
   };
 
@@ -66,6 +69,24 @@ export default function LegoCollectionForm() {
             <Label className="mb-2 mr-1 text-sm font-medium sm:mb-0">
               {t("lego-collection.label.description")}
             </Label>
+
+            <div className="flex items-center">
+              <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+                {t("common.model")}
+              </Label>
+              <Select value={model} onValueChange={setModel}>
+                <SelectTrigger id="model-select" className="w-full">
+                  <SelectValue placeholder={t("common.model")} />
+                </SelectTrigger>
+                <SelectContent>
+                  {[...models, ...imageEditModels].map((modelOption) => (
+                    <SelectItem key={modelOption} value={modelOption}>
+                      {modelOption}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="flex flex-col space-y-3 sm:flex-row sm:items-center sm:space-x-4 sm:space-y-0">

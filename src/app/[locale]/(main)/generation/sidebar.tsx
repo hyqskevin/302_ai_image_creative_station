@@ -235,6 +235,151 @@ const menuItems = [
     label: "cover_poster",
     path: "/generation/cover-poster",
   },
+  {
+    id: "mini_tilt_shift_landscape",
+    label: "mini_tilt_shift_landscape",
+    path: "/generation/mini-tilt-shift-landscape",
+  },
+  {
+    id: "q_version_keycap",
+    label: "q_version_keycap",
+    path: "/generation/q-version-keycap",
+  },
+  {
+    id: "mini_3d_shop",
+    label: "mini_3d_shop",
+    path: "/generation/mini-3d-shop",
+  },
+  {
+    id: "finger_nail_painting",
+    label: "finger_nail_painting",
+    path: "/generation/finger-nail-painting",
+  },
+  {
+    id: "t_shirt_pin",
+    label: "t_shirt_pin",
+    path: "/generation/t-shirt-pin",
+  },
+  {
+    id: "lego_city_landmark",
+    label: "lego_city_landmark",
+    path: "/generation/lego-city-landmark",
+  },
+  {
+    id: "word_and_graphic_fusion",
+    label: "word_and_graphic_fusion",
+    path: "/generation/word-and-graphic-fusion",
+  },
+  {
+    id: "3d_chrome_badge",
+    label: "3d_chrome_badge",
+    path: "/generation/3d-chrome-badge",
+  },
+  {
+    id: "animal_landmark_selfie",
+    label: "animal_landmark_selfie",
+    path: "/generation/animal-landmark-selfie",
+  },
+  {
+    id: "custom_anime_figure",
+    label: "custom_anime_figure",
+    path: "/generation/custom-anime-figure",
+  },
+  {
+    id: "glass_effect",
+    label: "glass_effect",
+    path: "/generation/glass-effect",
+  },
+  {
+    id: "rusty_iron_plate",
+    label: "rusty_iron_plate",
+    path: "/generation/rusty-iron-plate",
+  },
+  {
+    id: "flowing_ink",
+    label: "flowing_ink",
+    path: "/generation/flowing-ink",
+  },
+  {
+    id: "neon_graffiti",
+    label: "neon_graffiti",
+    path: "/generation/neon-graffiti",
+  },
+  {
+    id: "grab_machine",
+    label: "grab_machine",
+    path: "/generation/grab-machine",
+  },
+  {
+    id: "creative_minimalist_ad",
+    label: "creative_minimalist_ad",
+    path: "/generation/creative-minimalist-ad",
+  },
+  {
+    id: "glass_fragment",
+    label: "glass_fragment",
+    path: "/generation/glass-fragment",
+  },
+  {
+    id: "creative_drawstring_bag",
+    label: "creative_drawstring_bag",
+    path: "/generation/creative-drawstring-bag",
+  },
+  {
+    id: "flower_sculpture",
+    label: "flower_sculpture",
+    path: "/generation/flower-sculpture",
+  },
+  {
+    id: "succulent_pot",
+    label: "succulent_pot",
+    path: "/generation/succulent-pot",
+  },
+  {
+    id: "retro_science_fiction_book_cover",
+    label: "retro_science_fiction_book_cover",
+    path: "/generation/retro-science-fiction-book-cover",
+  },
+  {
+    id: "coin",
+    label: "coin",
+    path: "/generation/coin",
+  },
+  {
+    id: "emotion_cake",
+    label: "emotion_cake",
+    path: "/generation/emotion-cake",
+  },
+  {
+    id: "balloon",
+    label: "balloon",
+    path: "/generation/balloon",
+  },
+  {
+    id: "monster_letter",
+    label: "monster_letter",
+    path: "/generation/monster-letter",
+  },
+  {
+    id: "toy_box_city",
+    label: "toy_box_city",
+    path: "/generation/toy-box-city",
+  },
+  {
+    id: "threeD_people",
+    label: "threeD_people",
+    path: "/generation/threeD-people",
+  },
+  {
+    id: "flat_lay_photo",
+    label: "flat_lay_photo",
+    path: "/generation/flat-lay-photo",
+  },
+  {
+    id: "cartoon_to_real",
+    label: "cartoon_to_real",
+    path: "/generation/cartoon-to-real",
+  },
 ];
 
 const Sidebar = () => {

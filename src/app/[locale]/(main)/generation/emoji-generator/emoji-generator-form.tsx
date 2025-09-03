@@ -28,6 +28,8 @@ import { Pencil } from "lucide-react";
 import EmojiPicker from "emoji-picker-react";
 import type { EmojiClickData } from "emoji-picker-react";
 import { useTranslations } from "next-intl";
+import { models } from "@/constants/models";
+import { Label } from "@/components/ui/label";
 
 export default function EmojiGeneratorForm() {
   const t = useTranslations();
@@ -39,6 +41,7 @@ export default function EmojiGeneratorForm() {
   const [customText, setCustomText] = useState("");
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const { generateImg } = useGenerateImage();
+  const [model, setModel] = useState("gpt-image-1");
 
   const handleEmojiSelect = (emojiData: EmojiClickData) => {
     setEmoji(emoji + emojiData.emoji);
@@ -79,6 +82,7 @@ export default function EmojiGeneratorForm() {
       ),
       isOptimize: true,
       type: "emoji_generator",
+      model: model,
     });
   };
 
@@ -160,6 +164,9 @@ export default function EmojiGeneratorForm() {
                   />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="custom">
+                    {t("emoji-generator.style.custom")}
+                  </SelectItem>
                   <SelectItem value="paperCraft">
                     {t("emoji-generator.style.paperCraft")}
                   </SelectItem>
@@ -232,12 +239,42 @@ export default function EmojiGeneratorForm() {
                   <SelectItem value="vacuumPacked">
                     {t("emoji-generator.style.vacuumPacked")}
                   </SelectItem>
-                  <SelectItem value="custom">
-                    {t("emoji-generator.style.custom")}
+
+                  <SelectItem value="leopard">
+                    {t("emoji-generator.style.leopard")}
+                  </SelectItem>
+                  <SelectItem value="3DMetalChrome">
+                    {t("emoji-generator.style.3DMetalChrome")}
+                  </SelectItem>
+                  <SelectItem value="pastry">
+                    {t("emoji-generator.style.pastry")}
+                  </SelectItem>
+                  <SelectItem value="rainbowGlass">
+                    {t("emoji-generator.style.rainbowGlass")}
+                  </SelectItem>
+                  <SelectItem value="felt">
+                    {t("emoji-generator.style.felt")}
                   </SelectItem>
                 </SelectContent>
               </Select>
             </div>
+          </div>
+          <div className="flex items-center">
+            <Label htmlFor="model-select" className="w-16 flex-shrink-0">
+              {t("common.model")}
+            </Label>
+            <Select value={model} onValueChange={setModel}>
+              <SelectTrigger id="model-select" className="w-full">
+                <SelectValue placeholder={t("common.model")} />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((modelOption) => (
+                  <SelectItem key={modelOption} value={modelOption}>
+                    {modelOption}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center gap-4">
             <Button

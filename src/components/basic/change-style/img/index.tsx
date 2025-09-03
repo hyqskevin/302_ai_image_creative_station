@@ -12,6 +12,8 @@ import { createScopedLogger } from "@/utils";
 import { toast } from "sonner";
 import { useTranslations } from "next-intl";
 import { generationStoreAtom } from "@/stores/slices/generation_store";
+import { env } from "@/env";
+import ky from "ky";
 
 const ChangeImage = () => {
   const { addHistory, updateHistory } = useHistory();
@@ -21,6 +23,7 @@ const ChangeImage = () => {
   const { apiKey } = store.get(appConfigAtom);
   const t = useTranslations();
   const [generationCount, setGenerationCount] = useAtom(generationStoreAtom);
+
   const handleGenerateImage = async () => {
     if (generationCount.generationCount >= 4) {
       toast.warning(t("global.error.max_generation"));
@@ -36,6 +39,12 @@ const ChangeImage = () => {
       return;
     }
     let historyId = "";
+    setGenerationCount((prev) => ({
+      ...prev,
+      loading: true,
+      generationCount: prev.generationCount + 1,
+    }));
+
     try {
       historyId = await addHistory({
         rawPrompt: "",
@@ -48,17 +57,23 @@ const ChangeImage = () => {
           type: "realistic_photo",
         },
       });
+
+      let imageUrl = "";
       const { image } = await generateStyleImage({
         apiKey: apiKey || "",
         originImage: actionReferenceImage.actionImage,
         referenceImage: actionReferenceImage.referenceImage,
+        model: "gpt-image-1",
       });
 
+      imageUrl = image.url;
+
+      // 更新历史记录
       updateHistory(historyId, {
         rawPrompt: "",
         shouldOptimize: false,
         image: {
-          base64: image.url,
+          base64: imageUrl,
           prompt: "",
           model: "gpt-image-1",
           status: "success",
@@ -82,15 +97,19 @@ const ChangeImage = () => {
     } finally {
       setGenerationCount((prev) => ({
         ...prev,
+        loading: false,
         generationCount: Math.max(prev.generationCount - 1, 0),
       }));
     }
   };
+
   return (
     <div className="space-y-4">
       <ImageDesc />
       <div className="flex justify-end">
-        <Button onClick={handleGenerateImage}>生成</Button>
+        <Button onClick={handleGenerateImage}>
+          {t("global.generate_image")}
+        </Button>
       </div>
     </div>
   );

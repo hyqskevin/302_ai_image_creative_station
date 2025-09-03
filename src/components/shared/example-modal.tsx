@@ -37,7 +37,6 @@ const ExampleModal = () => {
   const { region } = store.get(appConfigAtom);
 
   const processedExamples = processExamples(exampleStore.examples, region);
-  console.log(processedExamples);
   return (
     <Dialog open={exampleStore.isModalOpen} onOpenChange={onChange}>
       <DialogContent className="p-6 sm:max-w-3xl">
