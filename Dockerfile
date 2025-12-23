@@ -12,7 +12,7 @@ WORKDIR /app
 RUN npm install -g pnpm@9.5.0
 
 # Copy package manager files only
-COPY package.json pnpm-lock.yaml* ./
+COPY package.json ./
 
 # Install dependencies
 RUN pnpm config set registry https://registry.npmmirror.com && \
