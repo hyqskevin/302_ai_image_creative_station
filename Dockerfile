@@ -16,7 +16,7 @@ COPY package.json ./
 
 # Install dependencies
 RUN pnpm config set registry https://registry.npmmirror.com && \
-    pnpm install --frozen-lockfile
+    pnpm install
 
 # Stage 2: Builder stage
 FROM base AS builder
